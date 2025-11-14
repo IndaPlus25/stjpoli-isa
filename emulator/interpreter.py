@@ -44,6 +44,7 @@ def JUMP(args, pc):
 def OUT(args):
     r = int(args[0][1:])
     print("OUT:", registers[r])
+    sys.exit(1)
     
 
 ### Reading the assembly file ###
@@ -59,12 +60,13 @@ def read_instructions(file: pathlib.Path):
 
 # Saves all the jumps to the dictionary where key: "name of the label value" value: "the line number/idx"
 def find_labels(instructions):
-    idx = 0
+    prog_index = 0
     for line in instructions:
         if line.endswith(":"):
-            labels[line[:-1]] = idx
-        else:
-            idx += 1
+            labels[line[:-1]] = prog_index
+        elif line.strip() != "": #elif not empty line
+            prog_index += 1
+
 
 def execute(instructions):
 # pc is the program counter
@@ -106,7 +108,6 @@ def main():
     find_labels(instructions)
     execute(instructions)
     sys.exit(1)
-    
 
 
 if __name__ == "__main__":
